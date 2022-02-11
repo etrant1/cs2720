@@ -1,23 +1,32 @@
 import java.util.Arrays;
-import java.util.Random;
-
-/* TODO
-* Comments for elaborate recursion
-* Comment for weird case of highIndex being the pivot
-* Comment test cases 
-* Polish
-*/
-
+import java.util.Scanner;
 
 class QS_RD 
 {
     public static void main(String[] args) {
-        Random random = new Random();
-        int[] input = random.ints(10, 1, 10).toArray();
+        Scanner scanner = new Scanner(System.in);
+        
+        // Taking input for length of array
+        System.out.print("Enter size of array: ");
+        int size = scanner.nextInt();
+
+        // Allocating space
+        int[] input = new int[size];
+
+        // Populating array
+        for (int i = 0; i < size; i++) 
+        {
+            System.out.printf("input[%d] : ",i);
+            input[i] = scanner.nextInt();
+        }
+
+        scanner.close();
 
         System.out.println("Before: " + Arrays.toString(input));
-        quicksort(input, 0, input.length - 1);
+        quicksort(input, 0, size - 1);
+
         System.out.println("After quicksort: " + Arrays.toString(input));
+
         System.out.print("After removeDuplicates: ");
         removeDuplicates(input);
 
@@ -26,32 +35,36 @@ class QS_RD
     // Quick sort
     private static void quicksort(int[] a, int lowIndex, int highIndex)
     {
+        // Exit case, single element arrays are sorted by nature
         if (lowIndex > highIndex) return;
 
-        int pivot = a[highIndex]; // target to compare against
+        // Select a pivot point to which everything to the pivot's left is smaller and to its right is larger
+        int pivot = a[highIndex]; 
 
+        // Pointers to target elements for swap in the low and high ends of the sub array
         int lp = lowIndex;
         int rp = highIndex;
 
-        System.out.println("Partitioning...");
+        // Call to partition helper function
         partition(a, lp, rp, pivot, lowIndex, highIndex);
     }
 
     // Partition helper
     private static void partition(int[] a, int lp, int rp, int pivot, int lowIndex, int highIndex) { 
+        // Monitor if the left pointer and right pointer have met (we will swap the pivot with this meeting point)
         while (lp < rp) 
         {
-            while (a[lp] <= pivot && lp < rp)
-            {
-                lp++;
-            }
-            while (a[rp] >= pivot && lp < rp)
-            {
-                rp--;
-            }
+            // Move forward until a number greater than the pivot is hit
+            while (a[lp] <= pivot && lp < rp) lp++;
+            
+            // Move backwards until a number less than the pivot is hit
+            while (a[rp] >= pivot && lp < rp) rp--;
+            
+            // Swap left and right pointer values
             swap(a, lp, rp);
         }
 
+        // In case the selected pivot is the highest element, prevent misplacement
         if(a[lp] > a[highIndex]) {
 			swap(a, lp, highIndex);
 		}
@@ -59,33 +72,40 @@ class QS_RD
 			lp = highIndex;
 		}
 
-        quicksort(a, lowIndex, lp - 1);
+        // Recursive calls to sort left and right halves
+        quicksort(a, lowIndex, lp-1);
         quicksort(a, lp+1, highIndex);
     }
 
     // Swap helper
     private static void swap(int[] a, int index1, int index2) {
-        System.out.println("Swapping...");
         int temp = a[index1];
         a[index1] = a[index2];
         a[index2] = temp; 
     }
 
-    // removeDuplicates
+    // removeDuplicates, in place
     private static void removeDuplicates(int[] a) {
+        // Intialize a pointer to track the size of the subarray
         int ptr = 0;  
-        for (int cur = 0; cur < a.length - 1; cur++)
+        // Transverse the array
+        for (int cur = 0; cur < a.length-1; cur++)
         {
-            if (a[cur] != a[cur + 1]) 
+            // Check if the next value is unique
+            if (a[cur] != a[cur+1]) 
             {
+                // Build the subarray by overwriting old values
                 a[ptr] = a[cur];
+                // Increment the size of the subarray
                 ptr++; 
             }
         }
 
-        a[ptr] = a[a.length - 1]; 
+        // Grab the last unique value
+        a[ptr] = a[a.length-1]; 
         ptr++;
 
+        // Output the resulting sub-array
         for (int i = 0; i < ptr; i++)
         {
             System.out.print(a[i] + " ");
