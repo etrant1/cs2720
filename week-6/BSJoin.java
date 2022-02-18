@@ -25,7 +25,7 @@ public class BSJoin {
         System.out.println("Input 1: " + Arrays.toString(a1));
         System.out.println("Input 2: " + Arrays.toString(a2));
 
-        System.out.println("Binary-Search-Join result: " + Arrays.toString(bsjoin(a1,a2)));
+        System.out.println("Binary-search-join result: " + Arrays.toString(bsjoin(a1,a2)));
     }
 
     private static int[] bsjoin(int[] n, int[] m) {
